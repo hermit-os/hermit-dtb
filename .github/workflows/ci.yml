@@ -21,7 +21,7 @@ jobs:
         with:
           components: clippy
       - name: Clippy
-        run: cargo xtask clippy
+        run: cargo clippy
         env:
           RUSTFLAGS: -Dwarnings
   

@@ -21,11 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#![allow(clippy::missing_safety_doc)]
 #![allow(dead_code)]
 #![no_std]
-
-// CRATES
-extern crate byteorder;
 
 // MACROS
 macro_rules! align_down {
@@ -41,7 +39,6 @@ macro_rules! align_up {
 }
 
 // IMPORTS
-use byteorder::{BigEndian, ByteOrder};
 use core::{cmp, mem, slice, str};
 
 // FUNCTIONS
@@ -60,9 +57,8 @@ fn c_strlen_on_slice(slice: &[u8]) -> usize {
 fn parse_token(struct_slice: &mut &[u8]) -> u32 {
     let (token_slice, remaining_slice) = struct_slice.split_at(mem::size_of::<u32>());
     *struct_slice = remaining_slice;
-    let token = BigEndian::read_u32(token_slice);
 
-    token
+    u32::from_be_bytes(token_slice.try_into().unwrap())
 }
 
 /// Get the node name of a FDT_BEGIN_NODE token and advance the struct_slice to the next token.
@@ -79,9 +75,8 @@ fn parse_begin_node<'a>(struct_slice: &mut &'a [u8]) -> &'a str {
 fn parse_prop_data_length(struct_slice: &mut &[u8]) -> usize {
     let (property_length_slice, remaining_slice) = struct_slice.split_at(mem::size_of::<u32>());
     *struct_slice = remaining_slice;
-    let property_length = BigEndian::read_u32(property_length_slice) as usize;
 
-    property_length
+    u32::from_be_bytes(property_length_slice.try_into().unwrap()) as usize
 }
 
 /// Get the property name of a FDT_PROP token and advance the struct_slice to the next token.
@@ -90,7 +85,8 @@ fn parse_prop_name<'a>(struct_slice: &mut &[u8], strings_slice: &'a [u8]) -> &'a
     let (property_name_offset_slice, remaining_slice) =
         struct_slice.split_at(mem::size_of::<u32>());
     *struct_slice = remaining_slice;
-    let property_name_offset = BigEndian::read_u32(property_name_offset_slice) as usize;
+    let property_name_offset =
+        u32::from_be_bytes(property_name_offset_slice.try_into().unwrap()) as usize;
 
     // Determine the length of that null-terminated string and return it.
     let property_name_slice = &strings_slice[property_name_offset..];
@@ -152,30 +148,30 @@ impl<'a> Dtb<'a> {
         let strings_slice = slice::from_raw_parts(address as *const u8, length);
 
         Some(Self {
-            header: header,
-            struct_slice: struct_slice,
-            strings_slice: strings_slice,
+            header,
+            struct_slice,
+            strings_slice,
         })
     }
 
     pub fn enum_subnodes<'b>(&self, path: &'b str) -> EnumSubnodesIter<'a, 'b> {
-        assert!(path.len() > 0);
+        assert!(!path.is_empty());
 
         EnumSubnodesIter {
             struct_slice: self.struct_slice,
-            path: path,
+            path,
             nesting_level: 0,
             looking_on_level: 1,
         }
     }
 
     pub fn enum_properties<'b>(&self, path: &'b str) -> EnumPropertiesIter<'a, 'b> {
-        assert!(path.len() > 0);
+        assert!(!path.is_empty());
 
         EnumPropertiesIter {
             struct_slice: self.struct_slice,
             strings_slice: self.strings_slice,
-            path: path,
+            path,
             nesting_level: 0,
             looking_on_level: 1,
         }
@@ -217,7 +213,7 @@ impl<'a> Dtb<'a> {
                                 // component.
                                 // Advance path and the nesting level we are looking for.
                                 path = &path[length_to_check..];
-                                if path.starts_with("/") {
+                                if path.starts_with('/') {
                                     // Skip the slash.
                                     path = &path[1..];
                                 }
@@ -324,7 +320,7 @@ impl<'a, 'b> Iterator for EnumSubnodesIter<'a, 'b> {
                                 // component.
                                 // Advance self.path and the nesting level we are looking for.
                                 self.path = &self.path[length_to_check..];
-                                if self.path.starts_with("/") {
+                                if self.path.starts_with('/') {
                                     // Skip the slash.
                                     self.path = &self.path[1..];
                                 }
@@ -418,7 +414,7 @@ impl<'a, 'b> Iterator for EnumPropertiesIter<'a, 'b> {
                                 // component.
                                 // Advance self.path and the nesting level we are looking for.
                                 self.path = &self.path[length_to_check..];
-                                if self.path.starts_with("/") {
+                                if self.path.starts_with('/') {
                                     // Skip the slash.
                                     self.path = &self.path[1..];
                                 }

@@ -3,7 +3,5 @@ name = "hermit-dtb"
 version = "0.1.0"
 authors = ["Colin Finck <colin.finck@rwth-aachen.de>"]
 license = "MIT"
+edition = "2021"
 
-[dependencies.byteorder]
-version = "1.2.4"
-default-features = false

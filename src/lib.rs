@@ -46,7 +46,7 @@ use core::{cmp, mem, slice, str};
 /// The latter requirement makes this function safe to use.
 fn c_strlen_on_slice(slice: &[u8]) -> usize {
     let mut end = slice;
-    while !end.is_empty() && unsafe { end.get_unchecked(0) } != &0 {
+    while !end.is_empty() && *end.get(0).unwrap_or(&0) != 0 {
         end = &end[1..];
     }
 
@@ -64,7 +64,7 @@ fn parse_token(struct_slice: &mut &[u8]) -> u32 {
 /// Get the node name of a FDT_BEGIN_NODE token and advance the struct_slice to the next token.
 fn parse_begin_node<'a>(struct_slice: &mut &'a [u8]) -> &'a str {
     let node_name_length = c_strlen_on_slice(struct_slice);
-    let node_name = unsafe { str::from_utf8_unchecked(&struct_slice[..node_name_length]) };
+    let node_name = str::from_utf8(&struct_slice[..node_name_length]).unwrap();
     let aligned_length = align_up!(node_name_length + 1, mem::size_of::<u32>());
     *struct_slice = &struct_slice[aligned_length..];
 
@@ -91,8 +91,7 @@ fn parse_prop_name<'a>(struct_slice: &mut &[u8], strings_slice: &'a [u8]) -> &'a
     // Determine the length of that null-terminated string and return it.
     let property_name_slice = &strings_slice[property_name_offset..];
     let property_name_length = c_strlen_on_slice(property_name_slice);
-    let property_name =
-        unsafe { str::from_utf8_unchecked(&property_name_slice[..property_name_length]) };
+    let property_name = str::from_utf8(&property_name_slice[..property_name_length]).unwrap();
 
     property_name
 }

@@ -46,7 +46,7 @@ use core::{cmp, mem, slice, str};
 /// The latter requirement makes this function safe to use.
 fn c_strlen_on_slice(slice: &[u8]) -> usize {
     let mut end = slice;
-    while !end.is_empty() && *end.get(0).unwrap_or(&0) != 0 {
+    while !end.is_empty() && *end.first().unwrap_or(&0) != 0 {
         end = &end[1..];
     }
 

@@ -1,10 +1,14 @@
 [package]
 name = "hermit-dtb"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Colin Finck <colin.finck@rwth-aachen.de>",
            "Stefan Lankes <slankes@eonerc.rwth-aachen.de>",
 ]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 description = "Crate to parse Flattened Device Trees (FDT) / Device Tree Blobs (DTB) in a `no_std` environment."
+keywords = ["fdt", "dtb", "device"]
+categories = ["os"]
+repository = "https://github.com/hermitcore/hermit-dtb"
+documentation = "https://docs.rs/hermit-dtb/latest/hermit_dtb/"
 edition = "2021"

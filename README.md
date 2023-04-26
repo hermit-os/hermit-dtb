@@ -1,4 +1,8 @@
 # hermit-dtb
+
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.rs/hermit-dtb/latest/hermit_dtb/)
+![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
+
 Crate to parse Flattened Device Trees (FDT)/Device Tree Blobs (DTB) in a `no_std` environment.
 Performs no dynamic memory allocations and can therefore be universally used for operating system development.
 Originally written for the AArch64 port of [HermitCore-rs](https://github.com/hermitcore/libhermit-rs), hence the name.

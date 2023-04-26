@@ -13,7 +13,7 @@ Originally written for the AArch64 port of [HermitCore-rs](https://github.com/he
 * Getting the data of a specific property.
 * Finding incomplete paths (e.g. looking for `/uart@` reliably yields `/uart@fe001000` if that is the only UART device).
 * Written in mostly safe Rust.
-  `unsafe` is only used when accessing the in-memory DTB in the first place (unavoidable) and for performance reasons (e.g. `str::from_utf8_unchecked`).
+  `unsafe` is only used when accessing the in-memory DTB in the first place (unavoidable).
 * `parse_dtb` example tool to demonstrate the features.
 
 ## ToDo

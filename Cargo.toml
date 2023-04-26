@@ -6,5 +6,5 @@ authors = ["Colin Finck <colin.finck@rwth-aachen.de>",
 ]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-description = "Crate to parse Flattened Device Trees (FDT) / Device Tree Blobs (DTB) in a `no_std` environmenti."
+description = "Crate to parse Flattened Device Trees (FDT) / Device Tree Blobs (DTB) in a `no_std` environment."
 edition = "2021"

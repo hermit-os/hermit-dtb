@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This project is dormant, and the repository is archived. Use another crate, such as [fdt](https://crates.io/crates/fdt), for device tree parsing.
+
 # hermit-dtb
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.rs/hermit-dtb/latest/hermit_dtb/)
